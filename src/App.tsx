@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 import { Heart, CalendarCheck, MapPin, Crown, Plus, Clock } from '@phosphor-icons/react'
 import { CraneIcon } from '@/components/CraneIcon'
 import confetti from 'canvas-confetti'
+import logo from '@/assets/images/1C4A8650-7D15-466A-B9FA-D8838A77CA95.png'
 
 interface Pledge {
   id: string
@@ -99,10 +100,8 @@ function App() {
 
       <div className="relative max-w-4xl mx-auto px-4 py-12">
         <header className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <CraneIcon className="w-12 h-12 text-accent" />
-            <h1 className="text-5xl md:text-6xl font-bold text-foreground">Ang's Cranes</h1>
-            <CraneIcon className="w-12 h-12 text-primary" />
+          <div className="flex items-center justify-center mb-6">
+            <img src={logo} alt="Angie's Cranes Logo" className="w-64 h-64 md:w-80 md:h-80" />
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Join us in honoring the Japanese tradition of <em>senbazuru</em> - folding 1000 paper cranes for healing and good fortune. 
