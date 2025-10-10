@@ -40,6 +40,21 @@ function App() {
   }, [])
 
   useEffect(() => {
+    const clearData = async () => {
+      const keys = await window.spark.kv.keys()
+      if (keys.length > 0) {
+        for (const key of keys) {
+          await window.spark.kv.delete(key)
+        }
+        setPledges([])
+        setTotalReceived(0)
+        console.log('All data cleared')
+      }
+    }
+    clearData()
+  }, [])
+
+  useEffect(() => {
     const calculateDays = () => {
       const targetDate = new Date('2025-10-22T00:00:00')
       const today = new Date()
