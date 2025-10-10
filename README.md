@@ -12,6 +12,20 @@ This template is your blank canvas. It comes with a minimal setup to help you ge
 
 Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
 
+## 🌐 GitHub Pages Deployment
+
+This template is configured to automatically deploy to GitHub Pages. To enable it:
+
+1. Go to your repository **Settings** → **Pages**
+2. Under **Source**, select **GitHub Actions**
+3. The site will automatically deploy when you push to the `main` branch
+4. Your site will be available at: `https://<username>.github.io/<repository-name>/`
+
+The deployment workflow is located at `.github/workflows/deploy.yml` and will:
+- Build the Vite application with the correct base path
+- Upload the build artifacts
+- Deploy to GitHub Pages
+
 🧹 Just Exploring?
 No problem! If you were just checking things out and don’t need to keep this code:
 
