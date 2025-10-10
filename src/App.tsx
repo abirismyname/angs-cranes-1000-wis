@@ -152,7 +152,7 @@ function App() {
               <h2 className="text-2xl font-semibold">Important Date</h2>
             </div>
             <p className="text-3xl font-bold text-accent mb-2">October 22, 2025</p>
-            <p className="text-muted-foreground">Transplant day - our goal is 1000 cranes by this date!</p>
+            <p className="text-muted-foreground">Hospital Admission day - our goal is 1000 cranes by this date!</p>
           </Card>
 
           <Card className="p-6 shadow-lg">
