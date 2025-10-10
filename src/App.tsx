@@ -22,37 +22,11 @@ interface Pledge {
 function App() {
   const [pledges, setPledges] = useKV<Pledge[]>('pledges', [])
   const [totalReceived, setTotalReceived] = useKV<number>('total-received', 0)
-  const [isOwner, setIsOwner] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [adminDialogOpen, setAdminDialogOpen] = useState(false)
   const [daysUntil, setDaysUntil] = useState(0)
   
   const [name, setName] = useState('')
   const [craneCount, setCraneCount] = useState('')
-  const [adminCount, setAdminCount] = useState('')
-
-  useEffect(() => {
-    window.spark.user().then(user => {
-      if (user) {
-        setIsOwner(user.isOwner)
-      }
-    })
-  }, [])
-
-  useEffect(() => {
-    const clearData = async () => {
-      const keys = await window.spark.kv.keys()
-      if (keys.length > 0) {
-        for (const key of keys) {
-          await window.spark.kv.delete(key)
-        }
-        setPledges([])
-        setTotalReceived(0)
-        console.log('All data cleared')
-      }
-    }
-    clearData()
-  }, [])
 
   useEffect(() => {
     const calculateDays = () => {
@@ -112,30 +86,7 @@ function App() {
     setDialogOpen(false)
   }
 
-  const handleAdminUpdate = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    const count = parseInt(adminCount)
-    if (isNaN(count) || count < 0) {
-      toast.error('Please enter a valid number')
-      return
-    }
 
-    setTotalReceived(count)
-    toast.success(`Total received updated to ${count} cranes!`)
-    
-    const prevReceived = totalReceived || 0
-    if (count >= 1000 && prevReceived < 1000) {
-      confetti({
-        particleCount: 150,
-        spread: 100,
-        origin: { y: 0.6 }
-      })
-    }
-    
-    setAdminCount('')
-    setAdminDialogOpen(false)
-  }
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -314,41 +265,6 @@ function App() {
             </div>
           )}
         </Card>
-
-        {isOwner && (
-          <Card className="p-6 shadow-lg mt-8 border-2 border-accent">
-            <h3 className="text-xl font-semibold mb-4 text-accent">Admin Controls</h3>
-            <Dialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="w-full">
-                  Update Total Received
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Update Cranes Received</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleAdminUpdate} className="space-y-4 mt-4">
-                  <div>
-                    <Label htmlFor="admin-count">Total Cranes Received</Label>
-                    <Input
-                      id="admin-count"
-                      type="number"
-                      min="0"
-                      value={adminCount}
-                      onChange={(e) => setAdminCount(e.target.value)}
-                      placeholder={`Current: ${totalReceivedValue}`}
-                      className="mt-1"
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Update Count
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </Card>
-        )}
 
         <footer className="mt-12 text-center text-sm text-muted-foreground">
           <p>Made with love and hope for Angela's healing journey 💝</p>

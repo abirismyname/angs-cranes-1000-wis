@@ -34,11 +34,11 @@ A community-driven platform where supporters can pledge to fold and mail origami
 - **Success criteria**: Accurate count display, visual progress representation (progress bar or circular indicator), celebration state when reaching 1000
 
 ### Admin Total Received Update
-- **Functionality**: Secure interface for updating the actual count of cranes received in the mail
+- **Functionality**: Secure API endpoint for updating the actual count of cranes received in the mail
 - **Purpose**: Keeps the community informed of real progress as physical cranes arrive
-- **Trigger**: Admin (owner) logs in and sees admin controls
-- **Progression**: Owner visits site → System detects isOwner status → Admin panel appears → Enter new received count → Submit → Total updates across all displays
-- **Success criteria**: Only visible to owner (using spark.user().isOwner), updates persist, immediately reflects in progress tracker
+- **Trigger**: Admin makes API call to update received count
+- **Progression**: Admin calls API with authentication → System validates owner status → Updates total received in KV store → Count updates across all user displays in real-time
+- **Success criteria**: Only accessible via authenticated API (using spark.user().isOwner), updates persist in KV store, immediately reflects in progress tracker for all users
 
 ### Mailing Information Display
 - **Functionality**: Clear, accessible display of the mailing address and deadline
@@ -52,7 +52,7 @@ A community-driven platform where supporters can pledge to fold and mail origami
 - **Goal exceeded** - Celebrate when pledges or received count passes 1000 with confetti animation or special message
 - **Invalid pledge numbers** - Validate that crane counts are positive numbers, provide helpful error messages
 - **Duplicate names** - Allow duplicate names but show them as separate entries (friends might have same first name)
-- **Non-owner accessing admin** - Admin controls simply don't render for non-owners, no error needed
+- **Unauthorized API access** - Admin API endpoints validate user.isOwner status server-side before allowing updates
 
 ## Design Direction
 The design should feel gentle, hopeful, and inspired by Japanese aesthetics—soft pastels reminiscent of origami paper, clean minimalist layouts with generous white space, and playful crane illustrations or subtle paper fold textures. The interface should feel light and uplifting rather than medical or clinical, celebrating the tradition and community effort. A minimal but warm interface serves the emotional core of the mission.
@@ -106,7 +106,6 @@ Animations should feel light and paper-like—gentle floating motions, soft fold
   - Custom crane SVG illustrations (origami-style geometric cranes)
   - Progress component styled with gradient fills and crane icon markers
   - Leaderboard with alternating subtle background colors for readability
-  - Admin panel as a collapsible Card that only renders for owner
   
 - **States**: 
   - Buttons: Rest (coral), Hover (slightly darker, lift shadow), Active (pressed down), Disabled (muted peach)
