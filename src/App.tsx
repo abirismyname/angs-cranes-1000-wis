@@ -1,4 +1,3 @@
-import { useKV } from '@github/spark/hooks'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -12,6 +11,7 @@ import { Heart, CalendarCheck, MapPin, Crown, Plus, Clock } from '@phosphor-icon
 import { CraneIcon } from '@/components/CraneIcon'
 import confetti from 'canvas-confetti'
 import logo from '@/assets/images/1C4A8650-7D15-466A-B9FA-D8838A77CA95.png'
+import { useCloudflareKV } from '@/hooks/useCloudflareKV'
 
 interface Pledge {
   id: string
@@ -21,8 +21,15 @@ interface Pledge {
 }
 
 function App() {
-  const [pledges, setPledges] = useKV<Pledge[]>('pledges', [])
-  const [totalReceived, setTotalReceived] = useKV<number>('total-received', 0)
+  const { 
+    pledges, 
+    totalReceived, 
+    totalPledged, 
+    loading, 
+    error, 
+    addPledge 
+  } = useCloudflareKV()
+  
   const [dialogOpen, setDialogOpen] = useState(false)
   const [daysUntil, setDaysUntil] = useState(0)
   
@@ -43,14 +50,13 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
-  const totalPledged = (pledges || []).reduce((sum, pledge) => sum + pledge.craneCount, 0)
   const totalReceivedValue = totalReceived || 0
   const pledgeProgress = Math.min((totalPledged / 1000) * 100, 100)
   const receivedProgress = Math.min((totalReceivedValue / 1000) * 100, 100)
 
   const sortedPledges = [...(pledges || [])].sort((a, b) => b.craneCount - a.craneCount)
 
-  const handlePledgeSubmit = (e: React.FormEvent) => {
+  const handlePledgeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     const count = parseInt(craneCount)
@@ -63,34 +69,49 @@ function App() {
       return
     }
 
-    const newPledge: Pledge = {
-      id: Date.now().toString(),
+    const result = await addPledge({
       name: name.trim(),
-      craneCount: count,
-      timestamp: Date.now()
-    }
+      craneCount: count
+    })
 
-    setPledges(current => [...(current || []), newPledge])
-    
-    toast.success(`Thank you ${name}! Your pledge of ${count} crane${count > 1 ? 's' : ''} has been recorded! 🎉`)
-    
-    if (totalPledged + count >= 1000 && totalPledged < 1000) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
-      })
+    if (result.success) {
+      toast.success(`Thank you ${name}! Your pledge of ${count} crane${count > 1 ? 's' : ''} has been recorded! 🎉`)
+      
+      if (totalPledged + count >= 1000 && totalPledged < 1000) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        })
+      }
+      
+      setName('')
+      setCraneCount('')
+      setDialogOpen(false)
+    } else {
+      toast.error('Failed to save pledge. Please try again.')
     }
-    
-    setName('')
-    setCraneCount('')
-    setDialogOpen(false)
   }
 
 
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
+      {loading && (
+        <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
+          <div className="text-center">
+            <CraneIcon className="w-16 h-16 text-primary mx-auto mb-4 crane-float" />
+            <p className="text-lg font-semibold">Loading cranes...</p>
+          </div>
+        </div>
+      )}
+      
+      {error && (
+        <div className="fixed top-4 right-4 bg-destructive text-destructive-foreground p-4 rounded-lg shadow-lg z-50">
+          <p>Error: {error}</p>
+        </div>
+      )}
+      
       <div className="absolute inset-0 pointer-events-none opacity-10">
         <CraneIcon className="absolute top-20 left-10 w-16 h-16 text-primary crane-float" style={{ animationDelay: '0s' }} />
         <CraneIcon className="absolute top-40 right-20 w-12 h-12 text-accent crane-float" style={{ animationDelay: '2s' }} />
