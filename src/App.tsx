@@ -200,6 +200,50 @@ function App() {
           )}
         </Card>
 
+        <Card className="p-6 shadow-lg mb-8 bg-gradient-to-br from-primary/10 to-secondary/10">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <CraneIcon className="w-8 h-8 text-primary" />
+            <h2 className="text-2xl font-semibold">Need Origami Paper?</h2>
+          </div>
+          <p className="text-center text-muted-foreground mb-6">
+            Get the perfect paper for your origami cranes! We've found some great options on Amazon:
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <a
+              href="https://www.amazon.com/Origami-Paper-Double-Sided-Color/dp/B06XW45PMR/ref=sr_1_6?crid=K8BEXAQIX4OI&dib=eyJ2IjoiMSJ9.bKWCEzbw6PtRJj5TujoBrZTtN9FJF3LWkWMxOKh8EI25w_Kx-wQo6lMS3CJLjT1ZOlRDUjYZTeQqREKFKwFARhhWoO323HqWe9oeQOVcrJKCt20MejcLm61Qfpr3EleXSAwf_hs_uCABGixYBrzUQ2UiPiHJK7vU_UmCPC22P2vsPlDm110dgRqNZZYQpvPbL0v5foNlH_LDvJqeCNacm46GQH9JCv5w1HrZHE_eoZBFrqHKIuBNOQjb9dWXcGks5irzzSgje0sc0iHKHmnEPmumpkZc1kV-1beoBp4X9WU.gYeK3WNjtdb_mn8UIcYNgYHwRjbTuo0tDt2rPMUeRt8&dib_tag=se&keywords=origami+paper&qid=1760133350&sprefix=origami+paper%2Caps%2C185&sr=8-6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-primary/30">
+                <h3 className="font-semibold text-lg mb-2 text-primary">💰 Budget-Friendly Option</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Double-sided colored origami paper - perfect for beginners and bulk folding
+                </p>
+                <Button variant="outline" className="w-full">
+                  View on Amazon →
+                </Button>
+              </Card>
+            </a>
+            <a
+              href="https://www.amazon.com/PAPERKIDDO-Japanese-Different-Printing-Bronzing/dp/B089PV2261/ref=sr_1_17?crid=1NYJ3TNXGH4UR&dib=eyJ2IjoiMSJ9.dz3XEI5clWTmap60aS7dUufUS9400n8BlNj9fDK4h0G77Ccb_zGxR4a4QFvKtiESthRoklFWVfHmuieH0GbeuEr2vUgi2l-nJ5WmzqWdvl7PPGzVSHhLfrLG2YjzpOA7qGcWX8l3EzUv4VOinRbyjuKjXr5JtjtMJXNa1BYb-ovsfk8guSqL6IZc4xyBJ52rosFYiCUZvX7kF6PriUlmRbaHx66uOkTekXqPOWIIm0QuX04rI4Vkp2sw5lhn9KT1lvNDjhXDITqRUDW1_vAbNeDcq2qXAhtsAn9WRFt4Dms.CYH5FPfPYpC6wO12hCj2GqmhDCdPYkusawoRnVkThJQ&dib_tag=se&keywords=fancy+origami+paper+designs&qid=1760133604&sprefix=fancy+origami+paper+designs%2Caps%2C168&sr=8-17"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-accent/30">
+                <h3 className="font-semibold text-lg mb-2 text-accent">✨ Premium Collection</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Japanese-style fancy designs with printing and bronzing - extra special cranes
+                </p>
+                <Button variant="outline" className="w-full">
+                  View on Amazon →
+                </Button>
+              </Card>
+            </a>
+          </div>
+        </Card>
+
         <div className="flex justify-center mb-8">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
