@@ -8,7 +8,7 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { Heart, CalendarCheck, MapPin, Crown, Plus } from '@phosphor-icons/react'
+import { Heart, CalendarCheck, MapPin, Crown, Plus, Clock } from '@phosphor-icons/react'
 import { CraneIcon } from '@/components/CraneIcon'
 import confetti from 'canvas-confetti'
 
@@ -25,6 +25,7 @@ function App() {
   const [isOwner, setIsOwner] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [adminDialogOpen, setAdminDialogOpen] = useState(false)
+  const [daysUntil, setDaysUntil] = useState(0)
   
   const [name, setName] = useState('')
   const [craneCount, setCraneCount] = useState('')
@@ -36,6 +37,20 @@ function App() {
         setIsOwner(user.isOwner)
       }
     })
+  }, [])
+
+  useEffect(() => {
+    const calculateDays = () => {
+      const targetDate = new Date('2025-10-22T00:00:00')
+      const today = new Date()
+      const diffTime = targetDate.getTime() - today.getTime()
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      setDaysUntil(diffDays > 0 ? diffDays : 0)
+    }
+
+    calculateDays()
+    const interval = setInterval(calculateDays, 1000 * 60 * 60)
+    return () => clearInterval(interval)
   }, [])
 
   const totalPledged = (pledges || []).reduce((sum, pledge) => sum + pledge.craneCount, 0)
@@ -128,6 +143,21 @@ function App() {
             Angela is receiving a stem cell transplant, and we're asking friends and community to send origami cranes to celebrate her journey.
           </p>
         </header>
+
+        <Card className="p-8 shadow-lg mb-8 bg-gradient-to-br from-accent/10 to-primary/10">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Clock className="w-8 h-8 text-accent" weight="fill" />
+            <h2 className="text-3xl font-semibold">Countdown to Transplant</h2>
+          </div>
+          <div className="text-center">
+            <div className="text-7xl md:text-8xl font-bold text-accent mb-2">
+              {daysUntil}
+            </div>
+            <p className="text-2xl text-muted-foreground">
+              {daysUntil === 1 ? 'day' : 'days'} until October 22, 2025
+            </p>
+          </div>
+        </Card>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <Card className="p-6 shadow-lg">
