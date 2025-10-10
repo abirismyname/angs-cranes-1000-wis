@@ -32,12 +32,17 @@ type PagesFunction<Env = any, P extends string = any, Data extends Record<string
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   try {
+    console.log('🔍 [FUNCTION] GET /api/pledges - Fetching data from KV');
+    
     const pledges = await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] || [];
     const totalReceived = await context.env.PLEDGE_KV.get('total-received', 'json') as number || 0;
     
+    console.log('🔍 [FUNCTION] Retrieved pledges:', pledges.length, 'items');
+    console.log('🔍 [FUNCTION] Total received:', totalReceived);
+    
     const totalPledged = pledges.reduce((sum, pledge) => sum + pledge.craneCount, 0);
     
-    return Response.json({
+    const result = {
       pledges,
       totalReceived,
       totalPledged,
@@ -46,7 +51,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         goalProgress: Math.min((totalPledged / 1000) * 100, 100),
         receivedProgress: Math.min((totalReceived / 1000) * 100, 100)
       }
-    });
+    };
+    
+    console.log('✅ [FUNCTION] Returning data:', result);
+    return Response.json(result);
   } catch (error) {
     console.error('Error fetching pledges:', error);
     return Response.json({ error: 'Failed to fetch pledges' }, { status: 500 });
@@ -55,10 +63,14 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
+    console.log('🔍 [FUNCTION] POST /api/pledges - Adding new pledge');
+    
     const pledge = await context.request.json() as Pledge;
+    console.log('🔍 [FUNCTION] Received pledge data:', pledge);
     
     // Validate pledge data
     if (!pledge.name || !pledge.craneCount || pledge.craneCount <= 0) {
+      console.error('❌ [FUNCTION] Invalid pledge data:', pledge);
       return Response.json({ error: 'Invalid pledge data' }, { status: 400 });
     }
     
@@ -70,20 +82,27 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       pledge.timestamp = Date.now();
     }
     
+    console.log('🔍 [FUNCTION] Processing pledge with ID:', pledge.id);
+    
     // Get existing pledges
     const existingPledges = await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] || [];
+    console.log('🔍 [FUNCTION] Found', existingPledges.length, 'existing pledges');
     
     // Add new pledge
     existingPledges.push(pledge);
     
     // Save back to KV
     await context.env.PLEDGE_KV.put('pledges', JSON.stringify(existingPledges));
+    console.log('✅ [FUNCTION] Saved', existingPledges.length, 'pledges to KV');
     
-    return Response.json({ 
+    const result = { 
       success: true, 
       pledge,
       totalPledges: existingPledges.length 
-    });
+    };
+    
+    console.log('✅ [FUNCTION] Returning result:', result);
+    return Response.json(result);
   } catch (error) {
     console.error('Error adding pledge:', error);
     return Response.json({ error: 'Failed to add pledge' }, { status: 500 });

@@ -26,15 +26,22 @@ export function useCloudflareKV() {
 
   const fetchPledges = useCallback(async () => {
     try {
+      console.log('🔍 [DEBUG] Fetching pledges from /api/pledges');
       setLoading(true);
       const response = await fetch('/api/pledges');
+      console.log('🔍 [DEBUG] Response status:', response.status);
+      
       if (!response.ok) {
+        console.error('❌ [DEBUG] Response not ok:', response.statusText);
         throw new Error('Failed to fetch pledges');
       }
+      
       const data = await response.json();
+      console.log('✅ [DEBUG] Fetched data:', data);
       setPledgeData(data);
       setError(null);
     } catch (err) {
+      console.error('❌ [DEBUG] Fetch error:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch pledges');
     } finally {
       setLoading(false);
@@ -43,6 +50,7 @@ export function useCloudflareKV() {
 
   const addPledge = useCallback(async (pledge: Omit<Pledge, 'id' | 'timestamp'>) => {
     try {
+      console.log('🔍 [DEBUG] Adding pledge:', pledge);
       const response = await fetch('/api/pledges', {
         method: 'POST',
         headers: {
@@ -55,14 +63,22 @@ export function useCloudflareKV() {
         }),
       });
 
+      console.log('🔍 [DEBUG] Add pledge response status:', response.status);
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ [DEBUG] Add pledge failed:', errorText);
         throw new Error('Failed to add pledge');
       }
+
+      const result = await response.json();
+      console.log('✅ [DEBUG] Pledge added successfully:', result);
 
       // Refresh data after successful addition
       await fetchPledges();
       return { success: true };
     } catch (err) {
+      console.error('❌ [DEBUG] Add pledge error:', err);
       setError(err instanceof Error ? err.message : 'Failed to add pledge');
       return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
     }
