@@ -1,0 +1,114 @@
+// Cloudflare Pages Function for handling pledges
+// This file should be placed in functions/api/pledges.ts
+
+interface Pledge {
+  id: string;
+  name: string;
+  craneCount: number;
+  timestamp: number;
+}
+
+// Cloudflare types
+interface KVNamespace {
+  get(key: string, type?: 'text' | 'json' | 'arrayBuffer' | 'stream'): Promise<any>;
+  put(key: string, value: string | ArrayBuffer | ArrayBufferView | ReadableStream): Promise<void>;
+  delete(key: string): Promise<void>;
+}
+
+interface Env {
+  PLEDGE_KV: KVNamespace;
+}
+
+interface EventContext<Env = any, P extends string = any, Data extends Record<string, unknown> = Record<string, unknown>> {
+  request: Request;
+  env: Env;
+  params: Record<P, string>;
+  data: Data;
+  waitUntil(promise: Promise<any>): void;
+  passThroughOnException(): void;
+}
+
+type PagesFunction<Env = any, P extends string = any, Data extends Record<string, unknown> = Record<string, unknown>> = (context: EventContext<Env, P, Data>) => Response | Promise<Response>;
+
+export const onRequestGet: PagesFunction<Env> = async (context) => {
+  try {
+    const pledges = await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] || [];
+    const totalReceived = await context.env.PLEDGE_KV.get('total-received', 'json') as number || 0;
+    
+    const totalPledged = pledges.reduce((sum, pledge) => sum + pledge.craneCount, 0);
+    
+    return Response.json({
+      pledges,
+      totalReceived,
+      totalPledged,
+      stats: {
+        totalPledgers: pledges.length,
+        goalProgress: Math.min((totalPledged / 1000) * 100, 100),
+        receivedProgress: Math.min((totalReceived / 1000) * 100, 100)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching pledges:', error);
+    return Response.json({ error: 'Failed to fetch pledges' }, { status: 500 });
+  }
+};
+
+export const onRequestPost: PagesFunction<Env> = async (context) => {
+  try {
+    const pledge = await context.request.json() as Pledge;
+    
+    // Validate pledge data
+    if (!pledge.name || !pledge.craneCount || pledge.craneCount <= 0) {
+      return Response.json({ error: 'Invalid pledge data' }, { status: 400 });
+    }
+    
+    // Add ID and timestamp if not provided
+    if (!pledge.id) {
+      pledge.id = Date.now().toString();
+    }
+    if (!pledge.timestamp) {
+      pledge.timestamp = Date.now();
+    }
+    
+    // Get existing pledges
+    const existingPledges = await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] || [];
+    
+    // Add new pledge
+    existingPledges.push(pledge);
+    
+    // Save back to KV
+    await context.env.PLEDGE_KV.put('pledges', JSON.stringify(existingPledges));
+    
+    return Response.json({ 
+      success: true, 
+      pledge,
+      totalPledges: existingPledges.length 
+    });
+  } catch (error) {
+    console.error('Error adding pledge:', error);
+    return Response.json({ error: 'Failed to add pledge' }, { status: 500 });
+  }
+};
+
+// Admin endpoint to update total received (only for authenticated admin)
+export const onRequestPut: PagesFunction<Env> = async (context) => {
+  try {
+    const { totalReceived } = await context.request.json() as { totalReceived: number };
+    
+    if (typeof totalReceived !== 'number' || totalReceived < 0) {
+      return Response.json({ error: 'Invalid total received count' }, { status: 400 });
+    }
+    
+    // In a real app, you'd verify admin authentication here
+    // For now, we'll just update the value
+    await context.env.PLEDGE_KV.put('total-received', JSON.stringify(totalReceived));
+    
+    return Response.json({ 
+      success: true, 
+      totalReceived 
+    });
+  } catch (error) {
+    console.error('Error updating total received:', error);
+    return Response.json({ error: 'Failed to update total received' }, { status: 500 });
+  }
+};

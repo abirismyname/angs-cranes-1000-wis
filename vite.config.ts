@@ -10,7 +10,6 @@ const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/angs-cranes-1000-wis/',
   plugins: [
     react(),
     tailwindcss(),
@@ -22,5 +21,10 @@ export default defineConfig({
     alias: {
       '@': resolve(projectRoot, 'src')
     }
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true,
   },
 });

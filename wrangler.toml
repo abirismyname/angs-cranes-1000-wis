@@ -1,0 +1,31 @@
+name = "angs-cranes-1000-wis"
+compatibility_date = "2024-10-10"
+pages_build_output_dir = "dist"
+
+# KV Namespace bindings
+[[kv_namespaces]]
+binding = "PLEDGE_KV"
+id = "071027e034fd4177befe8f104d5ead9d"
+preview_id = "8b16a04cf9c547aa9088004c15c5721f"
+
+[env.production]
+pages_build_output_dir = "dist"
+
+[[env.production.pages_build_command]]
+command = "npm run build"
+
+# Production KV settings
+[[env.production.kv_namespaces]]
+binding = "PLEDGE_KV"
+id = "071027e034fd4177befe8f104d5ead9d"
+
+[env.preview]
+pages_build_output_dir = "dist"
+
+[[env.preview.pages_build_command]]
+command = "npm run build"
+
+# Preview KV settings
+[[env.preview.kv_namespaces]]
+binding = "PLEDGE_KV"
+id = "8b16a04cf9c547aa9088004c15c5721f"
