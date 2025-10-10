@@ -216,9 +216,9 @@ function App() {
               className="block"
             >
               <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-primary/30">
-                <h3 className="font-semibold text-lg mb-2 text-primary">💰 Budget-Friendly Option</h3>
+                <h3 className="font-semibold text-lg mb-2 text-primary">💰 Simple Option</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Double-sided colored origami paper - perfect for beginners and bulk folding
+                  Double-sided colored origami paper
                 </p>
                 <Button variant="outline" className="w-full">
                   View on Amazon →
@@ -232,9 +232,9 @@ function App() {
               className="block"
             >
               <Card className="p-4 hover:shadow-md transition-shadow border-2 hover:border-accent/30">
-                <h3 className="font-semibold text-lg mb-2 text-accent">✨ Premium Collection</h3>
+                <h3 className="font-semibold text-lg mb-2 text-accent">✨ Fancy Option</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Japanese-style fancy designs with printing and bronzing - extra special cranes
+                  Double-sided patterned origami paper
                 </p>
                 <Button variant="outline" className="w-full">
                   View on Amazon →
