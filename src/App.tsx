@@ -126,14 +126,14 @@ function App() {
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Join us in honoring the Japanese tradition of <em>senbazuru</em> - folding 1000 paper cranes for healing and good fortune. 
-            Angela is receiving a stem cell transplant, and we're asking friends and community to send origami cranes to celebrate her journey.
+            Angie is receiving a stem cell transplant, and we're asking friends and community to send origami cranes to celebrate her journey.
           </p>
         </header>
 
         <Card className="p-8 shadow-lg mb-8 bg-gradient-to-br from-accent/10 to-primary/10">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Clock className="w-8 h-8 text-accent" weight="fill" />
-            <h2 className="text-3xl font-semibold">Countdown to Transplant</h2>
+            <h2 className="text-3xl font-semibold">Countdown to Hospital Admission</h2>
           </div>
           <div className="text-center">
             <div className="text-7xl md:text-8xl font-bold text-accent mb-2">
@@ -142,6 +142,23 @@ function App() {
             <p className="text-2xl text-muted-foreground">
               {daysUntil === 1 ? 'day' : 'days'} until October 22, 2025
             </p>
+          </div>
+        </Card>
+
+        <Card className="p-6 shadow-lg mb-8">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-semibold mb-2">Learn How to Fold Paper Cranes</h2>
+            <p className="text-muted-foreground">Watch this tutorial to learn the traditional origami crane folding technique</p>
+          </div>
+          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/pMEZ1Xkm0qM"
+              title="How to Fold Paper Cranes"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
           </div>
         </Card>
 
@@ -160,7 +177,7 @@ function App() {
               <MapPin className="w-6 h-6 text-primary" weight="fill" />
               <h2 className="text-2xl font-semibold">Mail Cranes To</h2>
             </div>
-            <p className="text-lg font-semibold mb-1">Angela's Cranes</p>
+            <p className="text-lg font-semibold mb-1">Angie's Cranes</p>
             <p className="text-muted-foreground leading-relaxed">
               3410 E Escuda Rd<br />
               Phoenix, AZ 85050
@@ -297,7 +314,7 @@ function App() {
           {sortedPledges.length === 0 ? (
             <div className="text-center py-12">
               <CraneIcon className="w-24 h-24 text-muted mx-auto mb-4 opacity-30" />
-              <p className="text-lg text-muted-foreground">Be the first to pledge cranes for Angela!</p>
+              <p className="text-lg text-muted-foreground">Be the first to pledge cranes for Angie!</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -331,7 +348,7 @@ function App() {
         </Card>
 
         <footer className="mt-12 text-center text-sm text-muted-foreground">
-          <p>Made with love and hope for Angela's healing journey 💝</p>
+          <p>Made with love and hope for Angie's healing journey 💝</p>
         </footer>
       </div>
     </div>
