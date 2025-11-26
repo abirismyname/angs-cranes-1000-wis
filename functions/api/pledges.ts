@@ -34,8 +34,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   try {
     console.log('🔍 [FUNCTION] GET /api/pledges - Fetching data from KV');
     
-    const pledges = await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] || [];
-    const totalReceived = await context.env.PLEDGE_KV.get('total-received', 'json') as number || 0;
+    const pledges = (await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] | null) ?? [];
+    const totalReceived = (await context.env.PLEDGE_KV.get('total-received', 'json') as number | null) ?? 0;
     
     console.log('🔍 [FUNCTION] Retrieved pledges:', pledges.length, 'items');
     console.log('🔍 [FUNCTION] Total received:', totalReceived);
@@ -85,7 +85,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     console.log('🔍 [FUNCTION] Processing pledge with ID:', pledge.id);
     
     // Get existing pledges
-    const existingPledges = await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] || [];
+    const existingPledges = (await context.env.PLEDGE_KV.get('pledges', 'json') as Pledge[] | null) ?? [];
     console.log('🔍 [FUNCTION] Found', existingPledges.length, 'existing pledges');
     
     // Add new pledge
