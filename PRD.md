@@ -38,7 +38,7 @@ A community-driven platform where supporters can pledge to fold and mail origami
 - **Purpose**: Keeps the community informed of real progress as physical cranes arrive
 - **Trigger**: Admin makes API call to update received count
 - **Progression**: Admin calls API with authentication → System validates owner status → Updates total received in KV store → Count updates across all user displays in real-time
-- **Success criteria**: Only accessible via authenticated API (using spark.user().isOwner), updates persist in KV store, immediately reflects in progress tracker for all users
+- **Success criteria**: Only accessible via authenticated API, updates persist in KV store, immediately reflects in progress tracker for all users
 
 ### Mailing Information Display
 - **Functionality**: Clear, accessible display of the mailing address and deadline
